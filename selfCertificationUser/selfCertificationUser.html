@@ -1,0 +1,90 @@
+<template>
+<template if:true={pricingData}>
+    <lightning-card title="Pricing Data" icon-name="custom:custom63">
+        <div class="slds-p-horizontal_medium">
+            <template for:each={pricingData} for:item="item">
+                <p key={item.Country__c}>
+                    <strong>Country:</strong> {item.Country__c} <br/>
+                    <strong>Price:</strong> ₹{item.Price__c}
+                </p>
+            </template>
+        </div>
+    </lightning-card>
+</template>
+
+<template if:true={showForm}>
+    <section role="dialog" tabindex="-1" aria-modal="true" class="slds-modal slds-fade-in-open">
+        <div class="slds-modal__container">
+            <header class="slds-modal__header">
+                <h2 class="slds-text-heading_medium">Self-Certification Form</h2>
+                <button class="slds-button slds-button_icon slds-modal__close" title="Close" onclick={handleCloseForm}>
+                    <lightning-icon icon-name="utility:close" alternative-text="close" size="small"></lightning-icon>
+                </button>
+            </header>
+
+            <div class="slds-modal__content slds-p-around_medium">
+                <!-- Your existing input fields here -->
+                <lightning-input label="User Name" value={userName} read-only></lightning-input>
+                <lightning-input label="Country" value={userCountry} read-only></lightning-input>
+                <lightning-input label="Email" value={userEmail} read-only></lightning-input>
+                <lightning-input label="Certification Period" value={certificationPeriod} read-only></lightning-input>
+
+                <lightning-input type="checkbox" label="I confirm that the pricing data is accurate." checked={confirmation} onchange={handleConfirmation}></lightning-input>
+
+                <lightning-textarea label="Comments" value={comments} onchange={handleComments}></lightning-textarea>
+
+                <lightning-input type="file" label="Upload Signed PDF" accept=".pdf" onchange={handleFileChange}></lightning-input>
+
+                <lightning-input type="checkbox" label="E-Signature Confirmation (SSO)" checked={eSignature} onchange={handleESignature}></lightning-input>
+            </div>
+
+            <footer class="slds-modal__footer">
+                <lightning-button variant="neutral" label="Cancel" onclick={handleCloseForm}></lightning-button>
+                <lightning-button variant="brand" label="Submit" onclick={handleSubmit} class="slds-m-left_small"></lightning-button>
+            </footer>
+        </div>
+    </section>
+
+    <div class="slds-backdrop slds-backdrop_open"></div>
+</template>
+
+
+<template if:true={userSubmissions}>
+    <lightning-card title="My  Submissions" icon-name="custom:custom63">
+         <div slot="actions">
+            <lightning-button
+                variant="brand"
+                label="Create"
+                onclick={handleCreateClick}>
+            </lightning-button>
+        </div>
+        <div class="slds-p-around_medium">
+            <lightning-datatable
+                key-field="Id"
+                data={userSubmissions}
+                columns={submissionColumns}
+                hide-checkbox-column
+                show-row-number-column>
+            </lightning-datatable>
+        </div>
+          <div class="slds-align_absolute-center slds-m-top_medium">
+            <lightning-button 
+                label="Previous" 
+                onclick={handlePrevious} 
+                disabled={isPreviousDisabled}>
+            </lightning-button>
+
+            <span class="slds-m-horizontal_medium">Page {currentPage} of {totalPages}</span>
+
+            <lightning-button 
+                label="Next" 
+                onclick={handleNext} 
+                disabled={isNextDisabled}>
+            </lightning-button>
+        </div>
+    </lightning-card>
+</template>
+<template if:false={userSubmissions}>
+    <p class="slds-text-color_error">No submissions found.</p>
+</template>
+</template>
